@@ -1,23 +1,23 @@
-package br.com.rodrigorahman.springbootcommysql.repository;
+package br.com.springacessoria.pucsigo.repository;
 
-import br.com.rodrigorahman.springbootcommysql.model.Pessoa;
+import br.com.springacessoria.pucsigo.model.Contrato;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-public class PessoaCustomRepository {
+public class ContratoCustomRepository {
 
     private final EntityManager em;
 
-    public PessoaCustomRepository(EntityManager em) {
+    public ContratoCustomRepository(EntityManager em) {
         this.em = em;
     }
 
-    public List<Pessoa> find(Long id, String nome, String sobrenome) {
+    public List<Contrato> find(Long id, String nome, String empresa) {
 
-        String query = "select P from Pessoa as P ";
+        String query = "select P from Contrato as P ";
         String condicao = "where";
 
         if(id != null) {
@@ -30,11 +30,11 @@ public class PessoaCustomRepository {
             condicao = " and ";
         }
 
-        if(sobrenome != null) {
-            query += condicao + " P.sobrenome = :sobrenome";
+        if(empresa != null) {
+            query += condicao + " P.empresa = :empresa";
         }
 
-        var q = em.createQuery(query, Pessoa.class);
+        var q = em.createQuery(query, Contrato.class);
 
         if(id != null) {
             q.setParameter("id", id);
@@ -44,8 +44,8 @@ public class PessoaCustomRepository {
             q.setParameter("nome", nome);
         }
 
-        if(sobrenome != null) {
-            q.setParameter("sobrenome", sobrenome);
+        if(empresa != null) {
+            q.setParameter("empresa", empresa);
         }
 
         return q.getResultList();
