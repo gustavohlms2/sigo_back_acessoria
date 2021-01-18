@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RepositorioControllerTest {
+public class AcessorControllerTest {
     @Autowired
-	private RepositorioController controller;
+	private AcessorController controller;
 
 	@Test
 	public void contextLoads() throws Exception {
