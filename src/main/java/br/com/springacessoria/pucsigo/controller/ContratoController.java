@@ -1,91 +1,64 @@
 package br.com.springacessoria.pucsigo.controller;
-
-import br.com.springacessoria.pucsigo.controller.dto.ContratoRq;
-import br.com.springacessoria.pucsigo.controller.dto.ContratoRs;
-import br.com.springacessoria.pucsigo.model.Contrato;
-import br.com.springacessoria.pucsigo.repository.ContratoCustomRepository;
-import br.com.springacessoria.pucsigo.repository.ContratoRepository;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.springacessoria.pucsigo.model.Contrato;
+import br.com.springacessoria.pucsigo.repository.ContratoRepository;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/contrato")
+@RequestMapping(value="/api")
+@Api(value="API REST Contratos")
 public class ContratoController {
-
-    private final ContratoRepository contratoRepository;
-    private final ContratoCustomRepository contratoCustomRepository;
-
-    public ContratoController(ContratoRepository contratoRepository, ContratoCustomRepository contratoCustomRepository) {
-        this.contratoRepository = contratoRepository;
-        this.contratoCustomRepository = contratoCustomRepository;
-    }
-
-    @CrossOrigin
-    @GetMapping("/")
-    public List<ContratoRs> findAll() {
-        var contratos = contratoRepository.findAll();
-        return contratos
-                .stream()
-                .map(ContratoRs::converter)
-                .collect(Collectors.toList());
-    }
-
-    @CrossOrigin
-    @GetMapping("/{id}")
-    public ContratoRs findById(@PathVariable("id") Long id) {
-        var contrato = contratoRepository.getOne(id);
-        return ContratoRs.converter(contrato);
-    }
-
-    @CrossOrigin
-    @PostMapping("/")
-    public void saveContrato(@RequestBody ContratoRq contrato) {
-        var n = new Contrato();
-        n.setNome(contrato.getNome());
-        n.setUrl(contrato.getUrl());
-        n.setValor(contrato.getValor());
-        n.setEmpresa(contrato.getEmpresa());
-        n.setIdAcessor(contrato.getIdAcessor());
-        n.setDescricao(contrato.getDescricao());
-        n.setDataCriacao(contrato.getDataCriacao());
-        n.setDataAlteracao(contrato.getDataAlteracao());
-        n.setIndativo(contrato.getIndativo());
-        contratoRepository.save(n);
-    }
-
-    @CrossOrigin
-    @PutMapping("/{id}")
-    public void updatePerson(@PathVariable("id") Long id, @RequestBody ContratoRq contrato) throws Exception {
-        var p = contratoRepository.findById(id);
-
-        if (p.isPresent()) {
-            var contratoSave = p.get();
-            contratoSave.setNome(contrato.getNome());
-            contratoSave.setUrl(contrato.getUrl());
-            contratoSave.setValor(contrato.getValor());
-            contratoSave.setIdAcessor(contrato.getIdAcessor());
-            contratoSave.setEmpresa(contrato.getEmpresa());
-            contratoSave.setDescricao(contrato.getDescricao());
-            contratoSave.setDataCriacao(contrato.getDataCriacao());
-            contratoSave.setDataAlteracao(contrato.getDataAlteracao());
-            contratoSave.setIndativo(contrato.getIndativo());
-            contratoRepository.save(contratoSave);
-        } else {
-            throw new Exception("Contrato Não encontrada");
-        }
-    }
-    
-    @CrossOrigin
-    @DeleteMapping("/{id}")
-    public void updatePerson(@PathVariable("id") Long id ) throws Exception {
-        var p = contratoRepository.findById(id);
-        if (p.isPresent()) {
-            contratoRepository.deleteById(id);        
-        } else {
-            throw new Exception("Contrato Não encontrada");
-        }
-    }
+	
+	@Autowired
+	ContratoRepository contratoRepository;
+	
+	@ApiOperation(value="Retorna uma lista de Contratos")
+	@GetMapping("/contrato")
+	public List<Contrato> listaProdutos(){
+		return contratoRepository.findAll();
+	}
+	
+	@ApiOperation(value="Retorna um contrato unico")
+	@GetMapping("/contrato/{id}")
+	public Contrato listaProdutoUnico(@PathVariable(value="id") long id){
+		return contratoRepository.findById(id);
+	}
+	
+	@ApiOperation(value="Salva um contrato")
+	@PostMapping("/contrato")
+	public Contrato salvaProduto(@RequestBody @Valid Contrato contrato) {
+		return contratoRepository.save(contrato);
+	}
+	
+	@ApiOperation(value="Deleta um contrato")
+	@DeleteMapping("/contrato")
+	public void deletaProduto(@RequestBody @Valid Contrato contrato) {
+		contratoRepository.delete(contrato);
+	}
+	
+	@ApiOperation(value="Atualiza um contrato")
+	@PutMapping("/contrato")
+	public Contrato atualizaProduto(@RequestBody @Valid Contrato contrato) {
+		return contratoRepository.save(contrato);
+	}
+	 
 
 }

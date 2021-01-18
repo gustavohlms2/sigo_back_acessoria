@@ -1,89 +1,64 @@
 package br.com.springacessoria.pucsigo.controller;
-
-import br.com.springacessoria.pucsigo.controller.dto.AcessorRq;
-import br.com.springacessoria.pucsigo.controller.dto.AcessorRs;
-import br.com.springacessoria.pucsigo.model.Acessor;
-import br.com.springacessoria.pucsigo.repository.AcessorCustomRepository;
-import br.com.springacessoria.pucsigo.repository.AcessorRepository;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.springacessoria.pucsigo.model.Acessor;
+import br.com.springacessoria.pucsigo.repository.AcessorRepository;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/acessor")
+@RequestMapping(value="/api")
+@Api(value="API REST Acessor")
 public class AcessorController {
-
-    private final AcessorRepository acessorRepository;
-    private final AcessorCustomRepository acessorCustomRepository;
-
-    public AcessorController(AcessorRepository acessorRepository, AcessorCustomRepository acessorCustomRepository) {
-        this.acessorRepository = acessorRepository;
-        this.acessorCustomRepository = acessorCustomRepository;
-    }
-
-    @CrossOrigin
-    @GetMapping("/")
-    public List<AcessorRs> findAll() {
-        var acessors = acessorRepository.findAll();
-        return acessors
-                .stream()
-                .map(AcessorRs::converter)
-                .collect(Collectors.toList());
-    }
-
-    @CrossOrigin
-    @GetMapping("/{id}")
-    public AcessorRs findById(@PathVariable("id") Long id) {
-        var acessor = acessorRepository.getOne(id);
-        return AcessorRs.converter(acessor);
-    }
-
-    @CrossOrigin
-    @PostMapping("/")
-    public void saveAcessor(@RequestBody AcessorRq p) {
-        var n = new Acessor();
-        n.setNome(p.getNome());
-        n.setDescricao(p.getDescricao());
-        n.setCpf(p.getCpf());
-        n.setCnpj(p.getCnpj());
-        n.setTelefone(p.getTelefone());
-        n.setDataCriacao(p.getDataCriacao());
-        n.setDataAlteracao(p.getDataAlteracao());
-        n.setIndativo(p.getIndativo()); 
-        acessorRepository.save(n);
-    }
-
-    @CrossOrigin
-    @PutMapping("/{id}")
-    public void updatePerson(@PathVariable("id") Long id, @RequestBody AcessorRq acessor) throws Exception {
-        var p = acessorRepository.findById(id);
-
-        if (p.isPresent()) {
-            var acessorSave = p.get();
-            acessorSave.setNome(acessor.getNome());
-            acessorSave.setDescricao(acessor.getDescricao());
-            acessorSave.setCpf(acessor.getCpf());
-            acessorSave.setCnpj(acessor.getCnpj());
-            acessorSave.setTelefone(acessor.getTelefone());
-            acessorSave.setDataCriacao(acessor.getDataCriacao());
-            acessorSave.setDataAlteracao(acessor.getDataAlteracao());
-            acessorSave.setIndativo(acessor.getIndativo());  
-            acessorRepository.save(acessorSave);      
-        } else {
-            throw new Exception("Acessor Não encontrada");
-        }
-    }
-    
-    @CrossOrigin
-    @DeleteMapping("/{id}")
-    public void updatePerson(@PathVariable("id") Long id ) throws Exception {
-        var p = acessorRepository.findById(id);
-        if (p.isPresent()) {
-            acessorRepository.deleteById(id);        
-        } else {
-            throw new Exception("Acessor Não encontrada");
-        }
-    }
+	
+	@Autowired
+	AcessorRepository acessorRepository;
+	
+	@ApiOperation(value="Retorna uma lista de Acessors")
+	@GetMapping("/acessor")
+	public List<Acessor> listaProdutos(){
+		return acessorRepository.findAll();
+	}
+	
+	@ApiOperation(value="Retorna um acessor unico")
+	@GetMapping("/acessor/{id}")
+	public Acessor listaProdutoUnico(@PathVariable(value="id") long id){
+		return acessorRepository.findById(id);
+	}
+	
+	@ApiOperation(value="Salva um acessor")
+	@PostMapping("/acessor")
+	public Acessor salvaProduto(@RequestBody @Valid Acessor acessor) {
+		return acessorRepository.save(acessor);
+	}
+	
+	@ApiOperation(value="Deleta um acessor")
+	@DeleteMapping("/acessor")
+	public void deletaProduto(@RequestBody @Valid Acessor acessor) {
+		acessorRepository.delete(acessor);
+	}
+	
+	@ApiOperation(value="Atualiza um acessor")
+	@PutMapping("/acessor")
+	public Acessor atualizaProduto(@RequestBody @Valid Acessor acessor) {
+		return acessorRepository.save(acessor);
+	}
+	 
 
 }

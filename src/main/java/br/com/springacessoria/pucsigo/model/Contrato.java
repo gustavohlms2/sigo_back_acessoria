@@ -2,42 +2,51 @@ package br.com.springacessoria.pucsigo.model;
 
 
 import java.text.DateFormat;
-import javax.persistence.*;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "contrato")
-public class Contrato {
+public class Contrato implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
-    @Column(name="idacessor")
+    @NotNull
     private Long idacessor;
 
-    @Column(name="nome")
+    @NotNull
     private String nome;
 
-    @Column(name="empresa")
+    @NotNull
     private String empresa;
 
-    @Column(name="descricao")
+    @NotNull
     private String descricao;
 
-    @Column(name="url")
+    @NotNull
     private String url;
 
-    @Column(name="valor")
+    @NotNull
     private String valor;
 
-    @Column(name="data_criacao")
+    @NotNull
     private String data_criacao;
-
-    @Column(name="data_alteracao")
+    
     private String data_alteracao;
 
-    @Column(name="indativo")
+    @NotNull
     private Boolean indativo;
 
     public Long getId() {
