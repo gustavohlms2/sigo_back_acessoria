@@ -1,5 +1,5 @@
-package br.com.springgestao.pucsigo;
-import br.com.springgestao.pucsigo.controller.AcessorController;
+package br.com.springacessoria.pucsigo;
+import br.com.springacessoria.pucsigo.controller.AcessorController;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AcessorControllerTest {
+public class AcessorControllerTests {
     @Autowired
 	private AcessorController controller;
 

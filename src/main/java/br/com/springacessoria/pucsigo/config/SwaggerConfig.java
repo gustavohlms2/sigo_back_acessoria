@@ -1,4 +1,4 @@
-package br.com.springgestao.pucsigo.config;
+package br.com.springacessoria.pucsigo.config;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import org.springframework.context.annotation.Bean;
