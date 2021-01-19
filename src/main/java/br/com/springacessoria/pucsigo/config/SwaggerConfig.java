@@ -20,11 +20,11 @@ import java.util.ArrayList;
 @EnableSwagger2
 public class SwaggerConfig {
 	
-	@Bean
+    @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.springacessoria.pucsigo"))
+                .apis(RequestHandlerSelectors.basePackage("br.com.springacessoria.pucsigo"))
                 .paths(regex("/api.*"))
                 .build()
                 .apiInfo(metaInfo());
